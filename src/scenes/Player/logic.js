@@ -12,15 +12,23 @@ export class logic {
     }
 
     onNext() {
-        if (this.getCurrentMusic().id !== this.data[this.data.length - 1].id) {
+        if (this.isNotLastMusic()) {
             this.dispatch(this.data[this.getCurrentMusic().id]);
         }
     }
 
+    isNotLastMusic() {
+        return this.getCurrentMusic().id !== this.data[this.data.length - 1].id;
+    }
+
     onPrevious() {
-        if (this.getCurrentMusic().id !== this.data[0].id) {
+        if (this.isNotFirstMusic()) {
             this.dispatch(this.data[this.getCurrentMusic().id - 2]);
         }
+    }
+
+    isNotFirstMusic() {
+        return this.getCurrentMusic().id !== this.data[0].id;
     }
 
     onPlay() {
@@ -28,11 +36,11 @@ export class logic {
     }
 
     onShuffle() {
-        let item = this.data[this.getRandomNumberToFetchItemFromDATA()];
+        let item = this.data[this.randomNumberValidInDataRang()];
         this.dispatch(item);
     }
 
-    getRandomNumberToFetchItemFromDATA() {
+    randomNumberValidInDataRang() {
         return Math.floor(Math.random() * this.data.length);
     }
 
