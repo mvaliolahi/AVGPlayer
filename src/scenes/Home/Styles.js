@@ -1,13 +1,29 @@
 export const Styles = {
     container: {
         flex: 1,
-        flexDirection: "column"
+
     },
 
     cardContainer: {
         flex: 1,
-        flexDirection: "row",
-        flexWrap: 'wrap',
-        margin: 5,
+        marginLeft: 3,
     },
+
+    modalIndicatorContainer: {
+        flexDirection: 'row',
+        height: 46,
+        backgroundColor: 'red'
+    },
+
+    modalIndicatorTextContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        paddingRight: 10,
+    },
+    modalIndicatorText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold'
+    }
+
 };

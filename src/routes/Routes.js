@@ -1,5 +1,5 @@
-import {Home} from "../scenes/Home/Home";
-import {Player} from "../scenes/Player/Player";
+import Home from "../scenes/Home/Home";
+import Player from "../scenes/Player/Player";
 import {TopMusics} from "../scenes/TopMusics/TopMusics";
 
 export const Routes = {
@@ -13,6 +13,6 @@ export const Routes = {
 
     TopMusics: {
         screen: TopMusics
+    },
 
-    }
 };

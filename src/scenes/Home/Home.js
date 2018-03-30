@@ -1,46 +1,59 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
-import {Card} from "../../components/Card/Card";
+import {Text, View} from 'react-native';
 import {ActionBar} from "../../components/ActionBar/ActionBar";
 import {Styles} from "./Styles";
-
-const data = [
-    {
-        id: 1,
-        artist: 'ColdPlay',
-        album: '2015',
-        cover: 'http://daxushequ.com/data/out/35/img59872010.jpg'
-    },
-    {
-        id: 2,
-        artist: 'Meysam',
-        album: '2018',
-        cover: 'http://daxushequ.com/data/out/35/img59908615.jpg'
-    },
-];
+import {GridView} from "../../components/GridView/GridView";
+import {ModalView} from "../../components/Modal/ModalView";
+import {Player} from "../Player/Player";
+// import {MusicManager} from "../../helpers/MusicManager/MusicManager"; // Native-Module
+import {data} from './../../data/data';
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
+import {Play} from "../../redux/actions/MusicPlay";
 
 export class Home extends Component {
+
+    gridItemHandler = (item) => {
+        this.context.store.dispatch(Play(item));
+        this.props.navigation.navigate('Player');
+    };
+
     render() {
         return (
             <View style={Styles.container}>
 
-                <ActionBar title='AVG Player'/>
+                {/*Action-Bar*/}
+                <ActionBar title='AGV Player' color='#FFFFFF'/>
 
+                {/*GridView*/}
                 <View style={Styles.cardContainer}>
-                    {
-                        data.map(({id, artist, album, cover}) => {
-                            return (
-                                <Card
-                                    key={id}
-                                    artist={artist}
-                                    album={album}
-                                    cover={cover}
-                                />
-                            );
-                        })
-                    }
+                    <GridView dataSource={data} columns={3} itemHandler={this.gridItemHandler}/>
                 </View>
+
+                {/*Player-Indicator*/}
+                <View style={Styles.modalIndicatorContainer}>
+                    <ModalView>
+                        <Player/>
+                    </ModalView>
+
+                    <View style={Styles.modalIndicatorTextContainer}>
+                        <Text style={Styles.modalIndicatorText}>{this.props.music.name}</Text>
+                    </View>
+                </View>
+
             </View>
         );
     }
 }
+
+Home.contextTypes = {
+    store: PropTypes.object
+};
+
+const mapToProps = (state) => {
+    return {
+        music: state.MusicPlay,
+    };
+};
+
+export default connect(mapToProps)(Home);
