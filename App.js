@@ -9,6 +9,7 @@ const Router = new TabNavigator(Routes, TabOptions);
 
 type Props = {};
 export default class App extends Component<Props> {
+
     render() {
         return (
             <Provider store={store}>

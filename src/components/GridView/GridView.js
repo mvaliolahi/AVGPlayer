@@ -13,7 +13,7 @@ export class GridView extends Component {
     render() {
         const columns = this.props.columns || 3;
         const margin = this.props.margin || 8;
-        const {dataSource, itemHandler} = this.props;
+        const {dataSource, itemEvent} = this.props;
 
         return (
             <FlatList
@@ -23,11 +23,11 @@ export class GridView extends Component {
                     return (
                         <Card
                             width={GridView.divideScreenToColumnsNumberToFitCards(margin, columns)}
-                            key={item.id}
-                            artist={item.artist}
+                            key={item.cover}
+                            artist={item.author}
                             album={item.album}
                             cover={item.cover}
-                            handler={itemHandler}
+                            handler={itemEvent}
                             item={item}
                         />
                     );

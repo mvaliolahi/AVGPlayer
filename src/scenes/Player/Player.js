@@ -39,8 +39,8 @@ export class Player extends Component {
 
                 {/*Header - Artist details*/}
                 <View style={Styles.musicInfoContainer}>
-                    <Text style={Styles.artistName}>{this.getMusic('artist')}</Text>
-                    <Text style={Styles.songName}>{this.getMusic('name')}</Text>
+                    <Text style={Styles.artistName}>{this.getMusic('author')}</Text>
+                    <Text style={Styles.songName}>{this.getMusic('title')}</Text>
                 </View>
 
                 {/*Middle - player layout*/}
@@ -101,8 +101,8 @@ export class Player extends Component {
 
                     {/*Music Info*/}
                     <View style={Styles.footerMusicInfo}>
-                        <Text style={Styles.footerSongName}>{this.getMusic('name')}</Text>
-                        <Text style={Styles.footerArtistName}>{this.getMusic('artist')}</Text>
+                        <Text style={Styles.footerSongName}>{this.getMusic('title')}</Text>
+                        <Text style={Styles.footerArtistName}>{this.getMusic('author')}</Text>
                     </View>
 
                     {/*Icon*/}

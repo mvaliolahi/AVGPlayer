@@ -1,13 +1,13 @@
 import {data as DATA} from './../../data/data';
 import {Play} from "../../redux/actions/MusicPlay";
+import {BaseLogic} from "../../helpers/Base/BaseLogic";
 
-export class logic {
+export class logic extends BaseLogic {
 
-    component = null;
-    data = []; // pass by constructor to mock (in test)
+    data = [];
 
     constructor(component, data = null) {
-        this.component = component;
+        super(component);
         this.data = (data === null) ? DATA : data;
     }
 

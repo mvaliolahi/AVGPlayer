@@ -5,43 +5,58 @@ import {Styles} from "./Styles";
 import {GridView} from "../../components/GridView/GridView";
 import {ModalView} from "../../components/Modal/ModalView";
 import {Player} from "../Player/Player";
-// import {MusicManager} from "../../helpers/MusicManager/MusicManager"; // Native-Module
-import {data} from './../../data/data';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {Play} from "../../redux/actions/MusicPlay";
+import {Container} from "../../helpers/Container/Container";
+import {logic} from "./logic";
+import {Indicator} from "../../components/Indicator/Indicator";
 
 export class Home extends Component {
 
-    gridItemHandler = (item) => {
-        this.context.store.dispatch(Play(item));
-        this.props.navigation.navigate('Player');
-    };
+    logic = null;
+
+    constructor() {
+        super();
+        this.state = {
+            isLoading: true,
+            songs: [],
+        };
+
+        this.logic = new logic(this, Container.make('cache'));
+    }
+
+    async componentDidMount() {
+        await this.logic.scanPhoneForMusic();
+    }
 
     render() {
+
         return (
-            <View style={Styles.container}>
+            <Indicator isLoading={this.state.isLoading}>
+                <View style={Styles.container}>
 
-                {/*Action-Bar*/}
-                <ActionBar title='AGV Player' color='#FFFFFF'/>
+                    {/*Action-Bar*/}
+                    <ActionBar title='AGV Player' color='#FFFFFF'/>
 
-                {/*GridView*/}
-                <View style={Styles.cardContainer}>
-                    <GridView dataSource={data} columns={3} itemHandler={this.gridItemHandler}/>
-                </View>
-
-                {/*Player-Indicator*/}
-                <View style={Styles.modalIndicatorContainer}>
-                    <ModalView>
-                        <Player/>
-                    </ModalView>
-
-                    <View style={Styles.modalIndicatorTextContainer}>
-                        <Text style={Styles.modalIndicatorText}>{this.props.music.name}</Text>
+                    {/*GridView*/}
+                    <View style={Styles.cardContainer}>
+                        <GridView dataSource={this.state.songs} columns={3}
+                                  itemEvent={this.logic.gridViewItemEventHandler}/>
                     </View>
-                </View>
 
-            </View>
+                    {/*Player-Indicator*/}
+                    <View style={Styles.modalIndicatorContainer}>
+                        <ModalView>
+                            <Player/>
+                        </ModalView>
+
+                        <View style={Styles.modalIndicatorTextContainer}>
+                            <Text style={Styles.modalIndicatorText}>{this.props.music.title}</Text>
+                        </View>
+                    </View>
+
+                </View>
+            </Indicator>
         );
     }
 }
