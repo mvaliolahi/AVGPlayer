@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-track-player')
     compile project(':react-native-get-music-files')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

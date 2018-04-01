@@ -1,7 +1,7 @@
 export class Cache {
 
     /*
-    Current cache driver.
+    Current cache TrackPlayer.
      */
     driver = null;
 
@@ -42,7 +42,6 @@ export class Cache {
     Add new cache or change exist one.
     */
     put(key, value, second = null) {
-        debugger;
         return this.driver.set(key, value, second);
     }
 

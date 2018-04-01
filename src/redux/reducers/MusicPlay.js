@@ -1,9 +1,14 @@
 const initialState = {
     id: 0,
-    name: 'Unknown',
-    artist: 'Unknown',
+    title: 'Unknown',
+    author: 'Unknown',
     album: 'Unknown',
     cover: 'http://bob-baker.com/buzz/wp-content/uploads/2013/11/Unknown.jpg',
+    path: 'https://archive.org/download/testmp3testfile/mpthreetest.mp3',
+    date: "2018",
+    duration: "267000",
+    fileName: "sample.mp3",
+    lyrics: "",
 };
 
 export const MusicPlay = (state = initialState, action) => {

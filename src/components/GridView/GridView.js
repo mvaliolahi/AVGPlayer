@@ -19,7 +19,7 @@ export class GridView extends Component {
             <FlatList
                 numColumns={columns}
                 data={dataSource}
-                renderItem={({item}) => {
+                renderItem={({item, index}) => {
                     return (
                         <Card
                             width={GridView.divideScreenToColumnsNumberToFitCards(margin, columns)}
@@ -28,7 +28,7 @@ export class GridView extends Component {
                             album={item.album}
                             cover={item.cover}
                             handler={itemEvent}
-                            item={item}
+                            item={Object.assign({}, item, {id: index})}
                         />
                     );
                 }}

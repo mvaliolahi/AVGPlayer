@@ -112,7 +112,8 @@ export const Styles = {
 
     footerImage: {
         width: '80%',
-        height: '80%'
+        height: '80%',
+        resizeMode: 'contain',
     },
 
     footerMusicInfo: {

@@ -11,7 +11,7 @@ export const Styles = {
     modalIndicatorContainer: {
         flexDirection: 'row',
         height: 46,
-        backgroundColor: 'red'
+        backgroundColor: '#6A1B9A',
     },
 
     modalIndicatorTextContainer: {

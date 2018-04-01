@@ -5,6 +5,9 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logic} from "./logic";
+import TrackPlayer from "react-native-track-player";
+import {Application} from "../../helpers/Application/Application";
+import {Player as PLAYER} from '../../helpers/Player/Player';
 
 /**
  * Player scene to play selected music file.
@@ -15,12 +18,27 @@ export class Player extends Component {
 
     constructor() {
         super();
-        this.logic = new logic(this);
+        this.state = {
+            isPlaying: PLAYER.state().isPlaying(),
+            trackId: null,
+            track: {},
+        };
+
+        this.logic = new logic(this, Application.AppData());
     }
 
     getMusic(key) {
         const state = this.context.store.getState();
         return state.MusicPlay[key];
+    }
+
+    async componentWillMount() {
+        TrackPlayer.registerEventHandler(async (data) => {
+        });
+    }
+
+    componentDidMount() {
+        this.logic.checkIfUserComAfterTabCardThenChangeStateToIsPlaying();
     }
 
     render() {
@@ -43,7 +61,7 @@ export class Player extends Component {
                     <Text style={Styles.songName}>{this.getMusic('title')}</Text>
                 </View>
 
-                {/*Middle - player layout*/}
+                {/*Middle - getPlayer layout*/}
                 <View style={Styles.playerContainer}>
 
 
@@ -72,9 +90,9 @@ export class Player extends Component {
 
                     <View style={Styles.playerButtonsContainer}>
                         {/*Play / Pause-Button*/}
-                        <TouchableOpacity onPress={() => this.logic.onPlay()}>
+                        <TouchableOpacity onPress={async () => this.logic.onPlay()}>
                             <View style={Styles.playPauseButtonContainer}>
-                                <Icon name={'play'} size={25} color={'#FFFFFF'}/>
+                                <Icon name={this.state.isPlaying ? 'pause' : 'play'} size={25} color={'#FFFFFF'}/>
                             </View>
                         </TouchableOpacity>
 

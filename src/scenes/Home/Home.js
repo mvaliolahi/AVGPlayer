@@ -17,6 +17,7 @@ export class Home extends Component {
 
     constructor() {
         super();
+
         this.state = {
             isLoading: true,
             songs: [],
@@ -36,7 +37,7 @@ export class Home extends Component {
                 <View style={Styles.container}>
 
                     {/*Action-Bar*/}
-                    <ActionBar title='AGV Player' color='#FFFFFF'/>
+                    <ActionBar title='AGV Player' color='#4A148C'/>
 
                     {/*GridView*/}
                     <View style={Styles.cardContainer}>

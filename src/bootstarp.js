@@ -1,6 +1,8 @@
 import {Container} from "./helpers/Container/Container";
 import {Cache} from './helpers/Cache/Cache';
 import {Async} from './helpers/Cache/Drivers/Async';
+import TrackPlayer from "react-native-track-player";
+import {Player} from "./helpers/Player/Player";
 
 /**
  * This file act like a service-provide, when app runs
@@ -8,7 +10,7 @@ import {Async} from './helpers/Cache/Drivers/Async';
  *
  * @constructor
  */
-export const bootstrap = () => {
+export const bootstrap = async () => {
 
     Container.bind('cache', () => {
         return new Cache({
@@ -16,5 +18,7 @@ export const bootstrap = () => {
             prefix: 'just-for-fun'
         });
     });
+
+    await Player.getTrackPlayer();
 
 };

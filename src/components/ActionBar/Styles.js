@@ -3,7 +3,7 @@ export const Styles = {
         paddingLeft: 10,
         justifyContent: 'center',
         height: 48,
-        backgroundColor: '#9d3200'
+        elevation: 5,
     },
 
     title: {

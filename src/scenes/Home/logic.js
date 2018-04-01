@@ -2,6 +2,8 @@ import {MusicManager} from "../../helpers/MusicManager/MusicManager";
 import {Cache} from "../../helpers/Cache/Cache";
 import {BaseLogic} from "../../helpers/Base/BaseLogic";
 import {Play} from "../../redux/actions/MusicPlay";
+import {Application} from "../../helpers/Application/Application";
+import {Player} from "../../helpers/Player/Player";
 
 export class logic extends BaseLogic {
 
@@ -23,20 +25,17 @@ export class logic extends BaseLogic {
      * @returns {Promise<void>}
      */
     async scanPhoneForMusic() {
-        debugger;
         if (await this.notExistsCache()) {
-            debugger;
-
             MusicManager.getAll(async (response) => {
                 this.updateGridViewWith(response);
                 await this.cache.set('musics', response);
+                Application.setAppData(response);
             });
         } else {
-            debugger;
-
             const musics = await this.cache.get('musics');
             this.updateGridViewWith(musics);
-            // scan for new musics.
+            Application.setAppData(musics);
+            // scan for new musics (SYNC).
         }
     }
 
@@ -58,8 +57,17 @@ export class logic extends BaseLogic {
      * GridView Item Event Handler
      * @param item
      */
-    gridViewItemEventHandler = (item) => {
+    gridViewItemEventHandler = async (item) => {
         this.component.context.store.dispatch(Play(item));
-        this.component.props.navigation.navigate('Player');
+        this.component.props.navigation.navigate('Player', {'is_playing': true});
+        await this.playSelectedMusic(item);
     };
+
+    async playSelectedMusic(item) {
+        if (Player.state().isNone()) {
+            await Player.play(item);
+        } else if (Player.state().isPlaying()) {
+            await Player.next(item);
+        }
+    }
 }
