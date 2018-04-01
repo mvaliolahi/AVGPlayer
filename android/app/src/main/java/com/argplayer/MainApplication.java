@@ -3,6 +3,7 @@ package com.argplayer;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import guichaguri.trackplayer.TrackPlayer;
 import com.reactlibrary.RNReactNativeGetMusicFilesPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new SvgPackage(),
             new TrackPlayer(),
                     new RNReactNativeGetMusicFilesPackage(),
                     new VectorIconsPackage(),

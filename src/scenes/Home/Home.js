@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableHighlight, View} from 'react-native';
 import {ActionBar} from "../../components/ActionBar/ActionBar";
 import {Styles} from "./Styles";
 import {GridView} from "../../components/GridView/GridView";
@@ -39,20 +39,25 @@ export class Home extends Component {
 
                     {/*GridView*/}
                     <View style={Styles.cardContainer}>
-                        <GridView dataSource={this.props.music_data} columns={3}
-                                  itemEvent={this.logic.gridViewItemEventHandler}/>
+                        <GridView
+                            dataSource={this.props.music_data}
+                            columns={3}
+                            itemEvent={this.logic.gridViewItemEventHandler}
+                        />
                     </View>
 
                     {/*Player-Indicator*/}
-                    <View style={Styles.modalIndicatorContainer}>
-                        <ModalView>
-                            <Player is_music_playing={this.props.is_music_playing}/>
-                        </ModalView>
+                    <TouchableHighlight onPress={() => this.modal.show()}>
+                        <View style={Styles.modalIndicatorContainer}>
+                            <ModalView ref={(node) => this.modal = node}>
+                                <Player is_music_playing={this.props.is_music_playing}/>
+                            </ModalView>
 
-                        <View style={Styles.modalIndicatorTextContainer}>
-                            <Text style={Styles.modalIndicatorText}>{this.props.music.title}</Text>
+                            <View style={Styles.modalIndicatorTextContainer}>
+                                <Text style={Styles.modalIndicatorText}>{this.props.music.title}</Text>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableHighlight>
 
                 </View>
             </Indicator>

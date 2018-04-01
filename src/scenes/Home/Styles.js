@@ -12,6 +12,7 @@ export const Styles = {
         flexDirection: 'row',
         height: 46,
         backgroundColor: '#6A1B9A',
+        alignItems:'center',
     },
 
     modalIndicatorTextContainer: {

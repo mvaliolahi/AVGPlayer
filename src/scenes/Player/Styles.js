@@ -40,13 +40,16 @@ export const Styles = {
     prevContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginLeft: 10,
+
     },
 
     nextContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: 10,
     },
 
     playPauseButtonContainer: {
@@ -117,13 +120,33 @@ export const Styles = {
     },
 
     footerMusicInfo: {
-        flex: 1,
+        flex: 3,
+        flexDirection: 'column',
         alignItems: 'flex-end',
     },
 
     footerIcon: {
         flex: 1,
         marginLeft: 10,
+    },
+
+    progressBar: {
+        container: {
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        image: {
+            position: 'absolute',
+            width: '100%',
+            height: '100%'
+        },
+        text: {
+            color: '#FFFFFF',
+            fontWeight: 'bold',
+            fontSize: 26
+        },
     },
 
 };

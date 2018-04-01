@@ -7,7 +7,7 @@ export const Styles = StyleSheet.create({
 
     content: {
         flex: 1,
-        backgroundColor: '#b7b7b7',
+        backgroundColor: '#6A1B9A',
     },
 
     Icon: {

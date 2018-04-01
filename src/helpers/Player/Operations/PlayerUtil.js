@@ -11,6 +11,7 @@ export class PlayerUtil {
             title: music.title || 'Unknown',
             artist: music.author || 'Unknown',
             artwork: music.cover || 'Unknown',
+            cover: music.cover || 'Unknown',
         };
     }
 }

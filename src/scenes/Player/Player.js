@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logic} from "./logic";
+import ProgressCircle from 'react-native-progress-circle';
+
 
 /**
  * Player scene to play selected music file.
@@ -16,15 +18,21 @@ export class Player extends Component {
     constructor() {
         super();
 
+        this.state = {
+            music_position: 0,
+            music_duration: 0,
+        };
+
         this.logic = new logic(this);
     }
 
     getMusic(key) {
-        return this.context.store.getState().Music[key];
+        return this.context.store.getState().Music[key] || 'Unknown';
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.logic.ifUserComByClickOnCardsThenChangeStateToIsPlaying();
+        this.logic.updateProgressUI();
     }
 
     render() {
@@ -62,7 +70,24 @@ export class Player extends Component {
 
                         {/*Timer*/}
                         <View style={Styles.timerContainer}>
-                            <Text style={Styles.timer}>00:00</Text>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+                                <ProgressCircle
+                                    percent={(this.state.music_position * 100) / this.state.music_duration}
+                                    radius={120}
+                                    borderWidth={4}
+                                    color="#3399FF"
+                                    shadowColor="#999"
+                                    bgColor="#fff"
+                                >
+                                    <View style={Styles.progressBar.container}>
+                                        <Image style={Styles.progressBar.image}
+                                               source={{uri: this.getMusic('cover')}}/>
+                                        <Text style={Styles.progressBar.text}>{this.state.format}</Text>
+                                    </View>
+                                </ProgressCircle>
+
+                            </View>
                         </View>
 
                         {/*Next-Track*/}
@@ -107,7 +132,12 @@ export class Player extends Component {
                     {/*Music Info*/}
                     <View style={Styles.footerMusicInfo}>
                         <Text style={Styles.footerSongName}>{this.getMusic('title')}</Text>
-                        <Text style={Styles.footerArtistName}>{this.getMusic('author')}</Text>
+                        <Text
+                            style={Styles.footerArtistName}>{
+                            this.getMusic('author').length > 20 ?
+                                this.getMusic('author').substring(0, this.getMusic('author').length / 2) :
+                                this.getMusic('author')
+                        }</Text>
                     </View>
 
                     {/*Icon*/}
@@ -121,6 +151,7 @@ export class Player extends Component {
         );
     }
 }
+
 
 Player.contextTypes = {
     store: PropTypes.object

@@ -1,6 +1,7 @@
 import {Pause, Play} from "../../redux/actions/Music";
 import {ComponentLogic} from "../../helpers/ComponentLogic/ComponentLogic";
 import {Player} from "../../helpers/Player/Player";
+import TrackPlayer from "react-native-track-player";
 
 /**
  * Player common operations.
@@ -121,4 +122,32 @@ export class logic extends ComponentLogic {
             console.log(error);
         }
     }
+
+    //TODO:: needs to refactor!
+    updateProgressUI() {
+        setInterval(async () => {
+
+            this.setState({
+                music_position: await TrackPlayer.getPosition(),
+                music_duration: await TrackPlayer.getDuration(),
+                format: this.secondsToTimeFormat(this.state().music_duration - this.state().music_position)
+            });
+
+        }, 100);
+    }
+
+    /**
+     * @param second
+     * @returns {string}
+     */
+    secondsToTimeFormat(second) {
+        second = Math.round(second);
+
+        let hours = Math.floor(second / (60 * 60));
+        let divisor_for_minutes = second % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+        let seconds = Math.ceil(divisor_for_minutes % 60);
+
+        return `${hours}:${minutes}:${seconds}`;
+    };
 }

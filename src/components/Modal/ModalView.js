@@ -31,7 +31,7 @@ export class ModalView extends Component {
                     onRequestClose={() => this.hide()}>
 
                     <View style={Styles.content}>
-                        <View style={Styles.icon}>
+                        <View style={[Styles.icon, {margin: 8}]}>
                             <TouchableOpacity
                                 onPress={() => {
                                     this.hide();

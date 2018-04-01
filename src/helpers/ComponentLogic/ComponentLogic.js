@@ -58,6 +58,13 @@ export class ComponentLogic {
     }
 
     /**
+     * @returns {*}
+     */
+    state() {
+        return this.component.state;
+    }
+
+    /**
      *
      */
     store() {
