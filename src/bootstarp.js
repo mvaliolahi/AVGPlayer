@@ -1,7 +1,6 @@
 import {Container} from "./helpers/Container/Container";
 import {Cache} from './helpers/Cache/Cache';
 import {Async} from './helpers/Cache/Drivers/Async';
-import TrackPlayer from "react-native-track-player";
 import {Player} from "./helpers/Player/Player";
 
 /**

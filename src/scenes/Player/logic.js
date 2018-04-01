@@ -1,29 +1,11 @@
-import {Play} from "../../redux/actions/MusicPlay";
-import {BaseLogic} from "../../helpers/Base/BaseLogic";
+import {Pause, Play} from "../../redux/actions/Music";
+import {ComponentLogic} from "../../helpers/ComponentLogic/ComponentLogic";
 import {Player} from "../../helpers/Player/Player";
 
 /**
  * Player common operations.
  */
-export class logic extends BaseLogic {
-
-    /**
-     * Cache data.
-     *
-     * @type {Array}
-     */
-    data = [];
-
-    /**
-     * Constructor.
-     *
-     * @param component
-     * @param data
-     */
-    constructor(component, data = null) {
-        super(component);
-        this.data = data;
-    }
+export class logic extends ComponentLogic {
 
     /**
      * Get Item from list and add index to it.
@@ -31,8 +13,8 @@ export class logic extends BaseLogic {
      * @param index
      * @returns {any & {id: *}}
      */
-    getMusicFromList(index) {
-        const item = this.data[index];
+    getMusicFromStoreByIndex(index) {
+        const item = this.getMusicDataFromStore()[index];
         return Object.assign(item, {id: index})
     }
 
@@ -40,7 +22,8 @@ export class logic extends BaseLogic {
      * @returns {boolean}
      */
     isNotLastMusic() {
-        return this.getCurrentMusic().id !== this.getMusicFromList(this.data.length - 1).id;
+        const lastMusicId = this.getMusicFromStoreByIndex(this.getMusicDataFromStore().length - 1).id;
+        return this.getCurrentMusic().id !== lastMusicId;
     }
 
     /**
@@ -48,11 +31,18 @@ export class logic extends BaseLogic {
      */
     async onNext() {
         if (this.isNotLastMusic()) {
-            const item = this.getMusicFromList(this.getCurrentMusic().id + 1);
-            this.dispatch(item);
-            await Player.next(item);
-            this.component.setState({isPlaying: true});
+            await this.playMusicByIndexAndUpdateUI(this.getCurrentMusic().id + 1);
         }
+    }
+
+    /**
+     * @param index
+     * @returns {Promise<void>}
+     */
+    async playMusicByIndexAndUpdateUI(index) {
+        const item = this.getMusicFromStoreByIndex(index);
+        this.dispatch(Play(item));
+        await Player.playAsNewTrack(item);
     }
 
     /**
@@ -60,11 +50,7 @@ export class logic extends BaseLogic {
      */
     async onPrevious() {
         if (this.isNotFirstMusic()) {
-            const item = this.getMusicFromList(this.getCurrentMusic().id - 1);
-            this.dispatch(item);
-
-            await Player.previous(item);
-            this.component.setState({isPlaying: true});
+            await this.playMusicByIndexAndUpdateUI(this.getCurrentMusic().id - 1);
         }
     }
 
@@ -72,7 +58,7 @@ export class logic extends BaseLogic {
      * @returns {boolean}
      */
     isNotFirstMusic() {
-        return this.getCurrentMusic().id !== this.getMusicFromList(0).id;
+        return this.getCurrentMusic().id !== this.getMusicFromStoreByIndex(0).id;
     }
 
     /**
@@ -81,13 +67,14 @@ export class logic extends BaseLogic {
     async onPlay() {
         if (Player.state().isPlaying()) {
             await Player.pause();
-            this.component.setState({isPlaying: false});
+            this.dispatch(Pause());
         } else if (Player.state().isPause()) {
             await Player.play();
-            this.component.setState({isPlaying: true});
+            this.dispatch(Play(this.getCurrentMusic()));
+
         } else {
             await Player.play(this.getCurrentMusic());
-            this.component.setState({isPlaying: true});
+            this.dispatch(Play(this.getCurrentMusic()));
         }
     }
 
@@ -95,49 +82,42 @@ export class logic extends BaseLogic {
      * @returns {Promise<void>}
      */
     async onShuffle() {
-        let item = this.getMusicFromList(this.randomNumberValidInDataRang());
-        this.dispatch(item);
-
-        await Player.shuffle(item);
-        this.component.setState({isPlaying: true});
+        await this.playMusicByIndexAndUpdateUI(this.randomMusicIndex());
     }
 
     /**
      * @returns {number}
      */
-    randomNumberValidInDataRang() {
-        return Math.floor(Math.random() * this.data.length);
-    }
-
-    /**
-     * Dispatch Play action to store.
-     *
-     * @param item
-     */
-    dispatch(item) {
-        this.component.context.store.dispatch(Play(item));
+    randomMusicIndex() {
+        return Math.floor(Math.random() * this.getMusicDataFromStore().length);
     }
 
     /**
      * @returns {*}
      */
     getCurrentMusic() {
-        const state = this.component.context.store.getState();
-        return state.MusicPlay;
+        return this.store().getState().Music;
+    }
+
+    /**
+     * @returns {*}
+     */
+    getMusicDataFromStore() {
+        return this.store().getState().MusicData;
     }
 
     /**
      *
      */
-    checkIfUserComAfterTabCardThenChangeStateToIsPlaying() {
+    ifUserComByClickOnCardsThenChangeStateToIsPlaying() {
         try {
             if (
-                this.component.props.navigation !== undefined &&
-                this.component.props.navigation.state.params.is_playing
+                this.props().navigation !== undefined &&
+                this.props().navigation.state.params.is_playing
             ) {
-                this.component.setState({'isPlaying': true});
+                this.setState({'isPlaying': true});
             }
-        }catch(error) {
+        } catch (error) {
             console.log(error);
         }
     }

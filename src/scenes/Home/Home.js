@@ -7,9 +7,9 @@ import {ModalView} from "../../components/Modal/ModalView";
 import {Player} from "../Player/Player";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {Container} from "../../helpers/Container/Container";
 import {logic} from "./logic";
 import {Indicator} from "../../components/Indicator/Indicator";
+import TrackPlayer from "react-native-track-player";
 
 export class Home extends Component {
 
@@ -17,17 +17,15 @@ export class Home extends Component {
 
     constructor() {
         super();
+        this.state = {isLoading: true};
 
-        this.state = {
-            isLoading: true,
-            songs: [],
-        };
-
-        this.logic = new logic(this, Container.make('cache'));
+        this.logic = new logic(this);
     }
 
     async componentDidMount() {
         await this.logic.scanPhoneForMusic();
+        TrackPlayer.registerEventHandler(async (data) => {
+        });
     }
 
     render() {
@@ -41,14 +39,14 @@ export class Home extends Component {
 
                     {/*GridView*/}
                     <View style={Styles.cardContainer}>
-                        <GridView dataSource={this.state.songs} columns={3}
+                        <GridView dataSource={this.props.music_data} columns={3}
                                   itemEvent={this.logic.gridViewItemEventHandler}/>
                     </View>
 
                     {/*Player-Indicator*/}
                     <View style={Styles.modalIndicatorContainer}>
                         <ModalView>
-                            <Player/>
+                            <Player is_music_playing={this.props.is_music_playing}/>
                         </ModalView>
 
                         <View style={Styles.modalIndicatorTextContainer}>
@@ -68,7 +66,9 @@ Home.contextTypes = {
 
 const mapToProps = (state) => {
     return {
-        music: state.MusicPlay,
+        music: state.Music,
+        music_data: state.MusicData,
+        is_music_playing: state.Music.state === 'PLAYING',
     };
 };
 

@@ -1,55 +1,52 @@
 import {MusicManager} from "../../helpers/MusicManager/MusicManager";
-import {Cache} from "../../helpers/Cache/Cache";
-import {BaseLogic} from "../../helpers/Base/BaseLogic";
-import {Play} from "../../redux/actions/MusicPlay";
-import {Application} from "../../helpers/Application/Application";
+import {ComponentLogic} from "../../helpers/ComponentLogic/ComponentLogic";
+import {Play} from "../../redux/actions/Music";
 import {Player} from "../../helpers/Player/Player";
+import {loadData} from "../../redux/actions/MusicData";
 
-export class logic extends BaseLogic {
-
-    /**
-     * @type Cache
-     */
-    cache = null;
-
-    /**
-     * @param component
-     * @param cache
-     */
-    constructor(component, cache) {
-        super(component);
-        this.cache = cache;
-    }
+export class logic extends ComponentLogic {
 
     /**
      * @returns {Promise<void>}
      */
     async scanPhoneForMusic() {
-        if (await this.notExistsCache()) {
-            MusicManager.getAll(async (response) => {
-                this.updateGridViewWith(response);
-                await this.cache.set('musics', response);
-                Application.setAppData(response);
-            });
+        if (await this.thereIsNoAnyCacheForMusics()) {
+            await this.scanPhoneAndSdCardForMusic();
         } else {
-            const musics = await this.cache.get('musics');
-            this.updateGridViewWith(musics);
-            Application.setAppData(musics);
-            // scan for new musics (SYNC).
+            await this.useCacheAsMusicDataSource();
+            // TODO::scan for new musics (SYNC).
         }
     }
 
     /**
-     * @param data
+     * @returns {Promise<void>}
      */
-    updateGridViewWith(data) {
-        this.component.setState({songs: data, isLoading: false});
+    async useCacheAsMusicDataSource() {
+        this.showGridView(await this.cache.get('musics'));
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async scanPhoneAndSdCardForMusic() {
+        MusicManager.getAll(async (response) => {
+            await this.cache.set('musics', response);
+            await this.showGridView(response);
+        });
+    }
+
+    /**
+     * @param musics
+     */
+    showGridView(musics) {
+        this.setState({isLoading: false});
+        this.dispatch(loadData(musics));
     }
 
     /**
      * @returns {Promise<boolean>}
      */
-    async notExistsCache() {
+    async thereIsNoAnyCacheForMusics() {
         return !await this.cache.has('musics');
     }
 
@@ -58,8 +55,8 @@ export class logic extends BaseLogic {
      * @param item
      */
     gridViewItemEventHandler = async (item) => {
-        this.component.context.store.dispatch(Play(item));
-        this.component.props.navigation.navigate('Player', {'is_playing': true});
+        this.dispatch(Play(item));
+        this.props().navigation.navigate('Player');
         await this.playSelectedMusic(item);
     };
 
@@ -67,7 +64,7 @@ export class logic extends BaseLogic {
         if (Player.state().isNone()) {
             await Player.play(item);
         } else if (Player.state().isPlaying()) {
-            await Player.next(item);
+            await Player.playAsNewTrack(item);
         }
     }
 }

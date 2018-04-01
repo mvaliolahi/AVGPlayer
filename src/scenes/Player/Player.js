@@ -5,9 +5,6 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logic} from "./logic";
-import TrackPlayer from "react-native-track-player";
-import {Application} from "../../helpers/Application/Application";
-import {Player as PLAYER} from '../../helpers/Player/Player';
 
 /**
  * Player scene to play selected music file.
@@ -18,27 +15,16 @@ export class Player extends Component {
 
     constructor() {
         super();
-        this.state = {
-            isPlaying: PLAYER.state().isPlaying(),
-            trackId: null,
-            track: {},
-        };
 
-        this.logic = new logic(this, Application.AppData());
+        this.logic = new logic(this);
     }
 
     getMusic(key) {
-        const state = this.context.store.getState();
-        return state.MusicPlay[key];
-    }
-
-    async componentWillMount() {
-        TrackPlayer.registerEventHandler(async (data) => {
-        });
+        return this.context.store.getState().Music[key];
     }
 
     componentDidMount() {
-        this.logic.checkIfUserComAfterTabCardThenChangeStateToIsPlaying();
+        this.logic.ifUserComByClickOnCardsThenChangeStateToIsPlaying();
     }
 
     render() {
@@ -92,7 +78,8 @@ export class Player extends Component {
                         {/*Play / Pause-Button*/}
                         <TouchableOpacity onPress={async () => this.logic.onPlay()}>
                             <View style={Styles.playPauseButtonContainer}>
-                                <Icon name={this.state.isPlaying ? 'pause' : 'play'} size={25} color={'#FFFFFF'}/>
+                                <Icon name={this.props.is_music_playing ? 'pause' : 'play'} size={25}
+                                      color={'#FFFFFF'}/>
                             </View>
                         </TouchableOpacity>
 
@@ -141,7 +128,9 @@ Player.contextTypes = {
 
 const mapToProps = (state) => {
     return {
-        music: state.MusicPlay,
+        music: state.Music,
+        is_music_playing: state.Music.state === 'PLAYING',
+        music_data: state.MusicData,
     };
 };
 

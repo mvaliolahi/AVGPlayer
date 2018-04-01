@@ -1,5 +1,6 @@
 import TrackPlayer from 'react-native-track-player';
 import {PLAYER_STATE, State} from './Operations/State';
+import {PlayerUtil} from "./Operations/PlayerUtil";
 
 /**
  * Track Player Wrapper.
@@ -20,9 +21,9 @@ export class Player {
      */
     static async play(music = null, beforePlayCallback = null) {
         if (music !== null) {
-            await this.addMusicTrackListAndPlayIt(music, beforePlayCallback);
+            await this.addMusicToPlayerModuleAndPlayIt(music, beforePlayCallback);
         } else {
-            await this.existAMusicInTrackListJustPlayIt();
+            await this.musicExitsInPlayerModuleJustPlayIt();
         }
 
         this.setState(PLAYER_STATE.PLAYING);
@@ -31,7 +32,7 @@ export class Player {
     /**
      * @returns {Promise<void>}
      */
-    static async existAMusicInTrackListJustPlayIt() {
+    static async musicExitsInPlayerModuleJustPlayIt() {
         await TrackPlayer.play();
     }
 
@@ -40,8 +41,8 @@ export class Player {
      * @param beforePlayCallback
      * @returns {Promise<void>}
      */
-    static async addMusicTrackListAndPlayIt(music, beforePlayCallback) {
-        TrackPlayer.add(Player.convertToTrackPlayerFormat(music));
+    static async addMusicToPlayerModuleAndPlayIt(music, beforePlayCallback) {
+        TrackPlayer.add(PlayerUtil.convertToTrackPlayerFormat(music));
         if (beforePlayCallback !== null) {
             await beforePlayCallback();
         }
@@ -61,27 +62,7 @@ export class Player {
      * @param music
      * @returns {Promise<void>}
      */
-    static async next(music) {
-        await this.stop();
-        await this.play(music, async () => await TrackPlayer.skipToNext())
-    }
-
-    /**
-     *
-     * @param music
-     * @returns {Promise<void>}
-     */
-    static async previous(music) {
-        await this.stop();
-        await this.play(music, async () => await TrackPlayer.skipToNext())
-    }
-
-    /**
-     *
-     * @param music
-     * @returns {Promise<void>}
-     */
-    static async shuffle(music) {
+    static async playAsNewTrack(music) {
         await this.stop();
         await this.play(music, async () => await TrackPlayer.skipToNext())
     }
@@ -92,21 +73,6 @@ export class Player {
     static async stop() {
         TrackPlayer.stop();
         this.setState(PLAYER_STATE.STOP);
-    }
-
-    /**
-     *
-     * @param music
-     * @returns {{id, url, title: string, artist: string, artwork: string|string|string|string|string|*}}
-     */
-    static convertToTrackPlayerFormat(music) {
-        return {
-            id: music.id,
-            url: music.path,
-            title: music.title || 'Unknown',
-            artist: music.author || 'Unknown',
-            artwork: music.cover || 'Unknown',
-        };
     }
 
     /**

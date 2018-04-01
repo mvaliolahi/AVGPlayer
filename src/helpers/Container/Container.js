@@ -1,3 +1,6 @@
+/**
+ * Service-Container.
+ */
 export class Container {
 
     /**

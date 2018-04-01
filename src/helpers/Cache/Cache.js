@@ -67,7 +67,7 @@ export class Cache {
     }
 
     /*
-    Remembers callback result until expired, after that execute callback for next loop.
+    Remembers callback result until expired, after that execute callback for playAsNewTrack loop.
      */
     remember(key, callback, second = 60) {
         return this.driver.remember(key, callback, second);
@@ -115,6 +115,9 @@ export class Cache {
         return this.driver.cachedItemsWithoutPrefix();
     }
 
+    /**
+     * @returns {*}
+     */
     getDriver() {
         return this.driver;
     }

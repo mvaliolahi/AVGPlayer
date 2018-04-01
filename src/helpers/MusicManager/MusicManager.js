@@ -1,7 +1,7 @@
 import {NativeModules} from "react-native";
 
 /**
- * Wrapper for Get-Music Native Module.
+ * Wrapper for Get-Music-Files Module.
  */
 export class MusicManager {
 
@@ -31,8 +31,8 @@ export class MusicManager {
     }
 
     /**
-     * Check Phone Memory for music files, and return it as array.
-     * return value is base on predefined tags.
+     * Check memory for musics file, and return result as an array.
+     * return value is dependent to tags.
      *
      * @param successCallback
      * @param failCallback
@@ -48,7 +48,7 @@ export class MusicManager {
     }
 
     /**
-     * Return GetMusicFiles NativeModule
+     * Return GetMusicFiles Module
      * @returns {*}
      */
     static getNativeModule() {

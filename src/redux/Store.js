@@ -1,6 +1,8 @@
 import {createStore, combineReducers} from 'redux';
-import {MusicPlay} from './reducers/MusicPlay';
+import {Music} from './reducers/Music';
+import {MusicData} from "./reducers/MusicData";
 
 export const store = createStore(combineReducers({
-    MusicPlay: MusicPlay,
+    Music: Music,
+    MusicData: MusicData
 }));
